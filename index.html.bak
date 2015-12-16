@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>zenNote ----所思即所得</title>
+	<!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/font-awesome.min.css">
+    
+	<!-- vis-->
+	<link href="/css/vis.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+    html{}
+    body { 
+        height:100%;
+        padding-top: 50px;
+    }
+    #container{
+		width:100%;
+		height:100%;
+        margin:0;
+        padding:0;
+    }
+	#left{
+		width:45%;
+		height:100%;
+	} 
+	#render{
+		width:48%;
+		height:100%;
+		margin-left:52%;
+		margin-right:52%;
+		position:absolute;
+        margin-bottom:0;
+        padding-top:0;
+		overflow-y: scroll;
+	}
+	.mahua-spliter{
+	 width:6px; 
+     position:absolute;
+     left:50%;
+     height:100%;
+     z-index:10000;
+     border:2px dashed #CCC;
+     cursor:ew-resize;
+	 }
+	 </style>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li id = btn-bold><a href="#" title = "粗体"><i class="fa fa-bold"></i></a></li>
+		<li><a href="#" title = "斜体"><i class="fa fa-italic"></i></a></li>
+		<li><a href="i#" title = "链接"><i class="fa fa-globe"></i></a></li>
+		<li><a href="#" title = "段落引用"><i class="fa fa-quote-left"></i></a></li>
+		<li><a href="#" title = "插入源码"><i class="fa fa-code"></i> </a></li>
+		<li><a href="#" title = "图片"><i class="fa fa-picture-o"></i> </a></li>
+		<li><a href="#" title = "有序列表"><i class="fa fa-list-ol"></i> </a></li>
+		<li><a href="#" title = "无序列表"><i class="fa fa-list-ul"></i> </a></li>
+		<li><a href="#" title = "标题"><i class="fa fa-list-alt"></i> </a></li>
+		<li><a href="#" title = "水平线"><i class="fa fa-minus"></i> </a></li>
+		<li><a href="#" title = "撤销"><i class="fa fa-undo"></i> </a></li>
+		<li><a href="#" title = "重做"><i class="fa fa-repeat"></i> </a></li>
+		<li id = "btn-save"><a href="#" title = "保存"><i class="fa fa-save	"></i> </a></li>
+		<li id = "btn-new"><a href="#" title = "新文稿"><i class="fa fa-file-o"> 新文稿</i> </a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">注册</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class = "fa fa-gear"></i> <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li id = "btn-normal-mode"><a href="#">普通模式</a></li>
+            <li id = "btn-vim-mode"><a href="#">VIM模式</a></li>
+            <li class="divider"></li>
+            <li><a href="#">导出PDF</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div id= "container">
+	<div class="mahua-spliter" id="mahua-spliter"></div>
+	<div id = "left">
+		<div id = "editor" style="height:100%;width:50%;position: absolute;"></div>
+    </div>
+	<div id = "render"></div>
+    </div>
+</div>
+
+    <script src="/js/jquery-1.11.2.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>	
+    <script src="/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/src-noconflict/ext-language_tools.js"></script>
+    <script src="/src-noconflict/keybinding-vim.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/marked.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/ui.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        function exeCode(node,lang){
+           var ret = document.createElement("pre");
+		
+           $.ajax({url:"/compile/" + lang,type:"POST",data:node.innerText,
+               success:function(text){
+		   ret.innerHTML = text;
+                   //alert(text);
+                },
+               error:function(){
+                   alert("error");
+                }
+            }
+           );
+           node.parentNode.appendChild(ret);
+        }
+    </script>
+    </script>
+	<script src="/js/viz.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/vis.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

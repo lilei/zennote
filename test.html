@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>zenNote ----所思即所得</title>
+	
+	
+	
+        
+	<!-- Bootstrap -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+    
+	<!-- vis-->
+	<link href="./css/vis.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+  #editor{
+	top:50px;
+    width:45%;
+    height:100%;
+    position: absolute;
+  }
+  #render{
+    position: absolute;
+    top:50px;
+	left:50%;
+    width:45%;
+    height:100%;
+    background-color: inherit;
+    overflow:scrool;
+  }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li id = btn-bold title = "粗体"><a href="#" ><i class="fa fa-bold"></i></a></li>
+    		<li><a href="#" title = "斜体"><i class="fa fa-italic"></i></a></li>
+    		<li><a href="i#" title = "链接"><i class="fa fa-globe"></i></a></li>
+    		<li><a href="#" title = "段落引用"><i class="fa fa-quote-left"></i></a></li>
+    		<li><a href="#" title = "插入源码"><i class="fa fa-code"></i> </a></li>
+    		<li><a href="#" title = "图片"><i class="fa fa-picture-o"></i> </a></li>
+    		<li><a href="#" title = "有序列表"><i class="fa fa-list-ol"></i> </a></li>
+    		<li><a href="#" title = "无序列表"><i class="fa fa-list-ul"></i> </a></li>
+    		<li><a href="#" title = "标题"><i class="fa fa-list-alt"></i> </a></li>
+    		<li><a href="#" title = "水平线"><i class="fa fa-minus"></i> </a></li>
+    		<li><a href="#" title = "撤销"><i class="fa fa-undo"></i> </a></li>
+    		<li><a href="#" title = "重做"><i class="fa fa-repeat"></i> </a></li>
+    		<li id = "btn-save"><a href="#" title = "保存"><i class="fa fa-save	"></i> </a></li>
+    		<li><a href="#" title = "新文稿"><i class="fa fa-file-o"> 新文稿</i> </a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">注册</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class = "fa fa-gear"></i> <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li id = "btn_normal_mode"><a href="#">普通模式</a></li>
+            <li id = "btn_vim_mode"><a href="#">VIM模式</a></li>
+            <li class="divider"></li>
+            <li><a href="#">导出PDF</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div id= "container">
+    <div id = "editor">
+    </div>
+
+    <div id = "render">
+    </div>
+
+</div>
+
+    <script src="js/jquery-1.11.2.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>	
+    <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src-noconflict/ext-language_tools.js"></script>
+    <script src="src-noconflict/keybinding-vim.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/marked.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.hotkeys.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/viz.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/vis.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        ace.require("ace/ext/language_tools");
+        var editor = ace.edit("editor");
+        //editor.setKeyboardHandler("ace/keyboard/vim");
+        editor.setTheme("ace/theme/github");
+        //editor.getSession().setMode("ace/mode/javascript");
+        editor.getSession().setMode("ace/mode/markdown");
+        editor.setShowPrintMargin(false);
+        document.getElementById('editor').style.fontSize='14px';
+
+        editor.setOptions({ 
+            enableBasicAutocompletion: true, 
+            enableSnippets: true, 
+            enableLiveAutocompletion: false 
+        }); 
+
+        function getArticleId(){
+				id = 1;
+			    var uri = document.location.pathname;
+				var re = /^\/article\/([0-9])+$/g;
+				if(re.test(uri)){
+			        id = uri.replace(re,'$1');
+				}
+				return id;
+		}
+        
+        $.get("/api/article?id=" + getArticleId(),function(data,status){
+			if (status == "success"){
+				var res = eval(data);
+				if(res.length == 0){
+					return;
+				}
+				editor.setValue(res[0].article_content);
+			}
+          });
+
+        var render = document.getElementById("render");
+        render.innerHTML = marked(editor.getValue());
+		drawTimeLine();
+        editor.getSession().on('change', function(e) {
+            //console.log(e.data.action);
+            render.innerHTML = marked(editor.getValue());
+			drawTimeLine();
+        });
+		
+
+		
+		//粗体
+		$("#btn_bold").click  (function(){
+			alert("bold");
+		});
+
+		//保存
+		$("#btn-save").click  (function(){
+			var article = {
+				"article_id":getArticleId(),
+				"article_title":"title",			
+				"article_content":editor.getValue()
+			}
+			 $.ajax({url:"/api/article/",type:"PUT",data:JSON.stringify(article),
+               success:function(text){
+                   alert(text);
+                },
+               error:function(){
+                   alert("error");
+                }
+            }	
+           );
+		});
+		
+		//vim模式
+		$("#btn_vim_mode").click  (function(){
+			editor.setKeyboardHandler("ace/keyboard/vim");
+		});
+		
+		//普通模式
+		$("#btn_normal_mode").click ( function(){
+			editor.setKeyboardHandler("");
+		});
+
+        editor.getSession().on("changeScrollTop", function(num){
+            //console.log(num);
+            //console.log("changeScroolTop");
+            $("#render").scrollTop(num);
+            //document.getElementById("render").scrollTop = num;
+            console.log(document.getElementById("render").scrollTop);
+        });
+
+		//绘制timeline
+		function drawTimeLine()
+		{
+			var lineList = $(".timeline");
+			for(i = 0;i < lineList.length;i++){
+				var t = lineList[i];
+				try
+				{
+					
+					var data = eval( t.innerText);
+					t.innerText = "";
+					var timeLine = new vis.Timeline(t,data,{});	
+				}
+				catch(e)
+				{
+					
+				}
+			}
+		}
+    </script>
+
+    <script type="text/javascript">
+        function exeCode(node,lang){
+           var ret = document.createElement("pre");
+		
+           $.ajax({url:"/compile/" + lang,type:"POST",data:node.innerText,
+               success:function(text){
+		   ret.innerHTML = text;
+                   //alert(text);
+                },
+               error:function(){
+                   alert("error");
+                }
+            }
+           );
+           node.parentNode.appendChild(ret);
+        }
+    </script>
+    </script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>zenNote</title>
+	<!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+    
+	<!-- vis-->
+	<link href="css/vis.css" rel="stylesheet" type="text/css" />
+
+
+  <!-- MetisMenu CSS -->
+  <link href="css/metisMenu.min.css" rel="stylesheet">
+
+	<style type="text/css">
+
+    html{
+        _padding:100px 0 100px 0;
+        _overflow:hidden;
+    }
+    body { 
+        height:100%;
+        width:100%;
+    }
+    #head{
+    height:50px;
+    width:100%;
+    left:0;
+    top:0px;
+    position: absolute;
+    z-index:100
+    }
+    #doc-head{
+        width:100%;
+        z-index:20;
+        position:absolute;
+        top:50px;
+    }
+    #container{
+        width:100%;
+        overflow:auto;
+        position:absolute;
+        z-index:20;
+        left:0;
+        top:50px;
+        bottom:0px;
+        margin-bottom: 15px;
+        _height:100%;
+    }
+	#left{
+		width:45%;
+	} 
+	#render{
+		width:48%;
+    height:100%;
+		margin-left:52%;
+    padding-left: 20px;
+		position:absolute;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+	.mahua-spliter{
+	 width:6px; 
+     position:absolute;
+     left:50%;
+     height:100%;
+     z-index:10000;
+     border:2px dashed #CCC;
+     cursor:ew-resize;
+	 }
+
+  .sliderbar{
+    position:absolute;
+    width:250px;
+    z-index:200;
+  }
+
+	 </style>
+
+</head>
+<body>
+
+    <div id="head">
+        <nav class="navbar navbar-default navbar-fixed-top">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li id = "btn-slider" ><a href="#" ><i class="fa fa-exchange"></i></a></li>
+                <li id = "btn-bold" ><a href="#" ><i class="fa fa-bold"></i></a></li>
+                <li id = "btn-em"><a href="#"><i class="fa fa-italic"></i></a></li>
+                <li id = "btn-link"><a href="#"><i class="fa fa-link"></i></a></li>
+                <li><a href="#" title = "段落引用"><i class="fa fa-quote-left"></i></a></li>
+                <li id = "btn-code"><a href="#"><i class="fa fa-code"></i> </a></li>
+                <li><a href="#" title = "图片"><i class="fa fa-picture-o"></i> </a></li>
+                <li><a href="#" title = "有序列表"><i class="fa fa-list-ol"></i> </a></li>
+                <li><a href="#" title = "无序列表"><i class="fa fa-list-ul"></i> </a></li>
+                <li><a href="#" title = "标题"><i class="fa fa-list-alt"></i> </a></li>
+                <li><a href="#" title = "水平线"><i class="fa fa-minus"></i> </a></li>
+                <li><a href="#" title = "撤销"><i class="fa fa-undo"></i> </a></li>
+                <li><a href="#" title = "重做"><i class="fa fa-repeat"></i> </a></li>
+                <li id = "btn-save"><a href="#"><i class="fa fa-save	"></i> </a></li>
+                <li id = "btn-new"><a href="#"><i class="fa fa-file-o"> 新文稿</i> </a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">注册</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class = "fa fa-gear"></i> <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li id = "btn-normal-mod"><a href="#">普通模式</a></li>
+                    <li id = "btn-vim-mod"><a href="#">VIM模式</a></li>
+                    <li id = "btn-dev-mod"><a href="#">调试模式</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">导出PDF</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+        </div>
+
+        <div id = "slider" class = "sliderbar" style = "display:none">
+    <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse" id="side-menu">
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side --> 
+    </div>
+
+        </nav>
+    </div>
+<div id= "container">
+  
+	<div class="mahua-spliter" id="mahua-spliter"></div>
+	<div id = "left">
+		<div id = "editor" style="height:100%;width:50%;position: absolute;"></div>
+    </div>
+	<div id = "render"></div>
+    </div>
+</div>
+
+
+<!-- link Modal -->
+<div class="modal fade" id="link-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">插入链接</h4>
+      </div>
+      <div class="modal-body">
+         <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="link-input">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- add-type Modal -->
+<div class="modal fade" id="add-type-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新建分类</h4>
+      </div>
+      <div class="modal-body">
+         <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="type-input">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id = "btn-add-type-save"  class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- add-article Modal -->
+<div class="modal fade" id="add-note-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新建日志</h4>
+      </div>
+      <div class="modal-body">
+         <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="note-input">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id = "btn-add-note-save"  class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script type="text/javascript">
+       window.$ = window.jQuery = require('./js/jquery.js'); 
+    </script>
+
+  	<script src="js/bootstrap.min.js"></script>	
+    <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src-noconflict/ext-language_tools.js"></script>
+    <script src="src-noconflict/keybinding-vim.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/marked.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.hotkeys.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/sideMenu.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        function exeCode(node,lang){
+           var ret = document.createElement("pre");
+		
+           $.ajax({url:"/compile/" + lang,type:"POST",data:node.innerText,
+               success:function(text){
+		   ret.innerHTML = text;
+                   //alert(text);
+                },
+               error:function(){
+                   alert("error");
+                }
+            }
+           );
+           node.parentNode.appendChild(ret);
+        }
+
+    </script>
+    </script>
+	<script src="js/viz.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/vis.js" type="text/javascript" charset="utf-8"></script>
+
+  <!-- Metis Menu Plugin JavaScript -->
+  <script src="js/metisMenu.min.js"></script>
+
+    <input style="display:none;" id="openFile" type="file" />
+    <input style="display:none;" id="saveFile" type="file" nwsaveas />
+
+</body>
+</html>
