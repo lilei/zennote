@@ -334,8 +334,8 @@ $("#btn-add-type-save").click(function(){
                 if(err){
                     alert(err);
                 }else{
-                    addMenu(dirName,sideMenu);
-                    $('#side-menu').metisMenu();
+                    var node = $('#side-menu').get(0);
+                    Menu(node).addSubMenu(dirName,"fa fa-table fa-fw");
                     $('#add-type-modal').modal("hide");
                 }
             });
