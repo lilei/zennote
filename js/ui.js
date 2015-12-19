@@ -335,7 +335,7 @@ $("#btn-add-type-save").click(function(){
                     alert(err);
                 }else{
                     var node = $('#side-menu').get(0);
-                    Menu(node).addSubMenu(dirName,"fa fa-table fa-fw");
+                    addDir(node,dirName);
                     $('#add-type-modal').modal("hide");
                 }
             });

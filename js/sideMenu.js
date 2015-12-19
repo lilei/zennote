@@ -107,6 +107,15 @@ function Menu(node){
     return this;
 }
 
+//添加文件夹
+function addDir(node,name){
+    var newNode = Menu(node).addSubMenu(name,"fa fa-table fa-fw");
+    Menu(newNode).addContexMenu("img/cut.png","cut",function(){
+        alert("cut");
+    })
+    return newNode;
+}
+
 
 //侧边栏
 var sideMenu = $("#side-menu").get(0);    //左边菜单

@@ -12,12 +12,10 @@ function walk(path,parentNode){
 
          }
          //console.log(files[fn]);  
-         var menu = Menu(parentNode).addSubMenu(files[fn],"fa fa-table fa-fw");
+         //var menu = Menu(parentNode).addSubMenu(files[fn],"fa fa-table fa-fw");
          if(stat.isDirectory() == true){  
-             walk(fname,menu);  
-             Menu(menu).addContexMenu("img/cut.png","cut",function(){
-                alert("text cut"); 
-             });
+            var menu = addDir(parentNode,files[fn]);
+            walk(fname,menu);  
          }
     }
 }
