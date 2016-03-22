@@ -1,5 +1,8 @@
 var fs = require("fs");
 
+var gui = require("nw.gui");
+gui.Window.get().show();
+
 $(function(){
 	// --- Initialize first Dynatree -------------------------------------------
 	$("#tree").dynatree({
@@ -21,6 +24,10 @@ $(function(){
 		onDeactivate: function(node) {
 			//$("#echoActive").text("-");
 		},
+
+		onCreate: function(node, span){
+				bindContextMenu(node,span);
+			},
 		dnd: {
 			onDragStart: function(node) {
 				//logMsg("tree.onDragStart(%o)", node);
@@ -98,3 +105,22 @@ function walk(path,parentNode){
          }
     }
 }
+
+function bindContextMenu(node,span) {
+	span.addEventListener('contextmenu', function(ev){
+            var menu = new gui.Menu();
+            menu.append(new gui.MenuItem({ icon: 'img/cut.png', label: '删除',click:function(){
+                    fs.unlink(node.data.key,function(err){
+                        if(err){
+                           alert(err); 
+                        }else{
+                        	node.remove();
+                        }
+                    })
+                } 
+            }));
+            menu.popup(ev.x,ev.y);
+            ev.stopPropagation();
+            return false;
+        },false);
+};
