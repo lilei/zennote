@@ -54,6 +54,7 @@ $(function(){
 							alert("move doc failed");
 						}else{
 							sourceNode.move(node, hitMode);
+							sourceNode.data.key = node.data.key + "/" + sourceNode.data.title;
 							if (!node.bExpanded) {
 								node.toggleExpand();
 							}
