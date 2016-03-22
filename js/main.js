@@ -33,28 +33,6 @@ onload = function(){
         enableSnippets: true, 
         enableLiveAutocompletion: false 
     }); 
-    /*var btnNewType = addMenu("新建分类",sideMenu);
-
-    //新建分类按钮
-    $(btnNewType).click (
-            function(){
-                $('#add-type-modal').modal({
-                  keyboard: true
-                });
-            }
-    );
-    */
-    Menu(sideMenu).addSubMenu("新建分类","fa fa-edit fa-fw",function(){
-        $('#add-type-modal').modal({
-          keyboard: true
-        });
-    });
-    walk("./doc",sideMenu);
-
-    $(function() {
-        $('#side-menu').metisMenu();
-    });
-
 }
 
 

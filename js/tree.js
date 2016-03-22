@@ -109,8 +109,20 @@ function walk(path,parentNode){
 function bindContextMenu(node,span) {
 	span.addEventListener('contextmenu', function(ev){
             var menu = new gui.Menu();
+            menu.append(new gui.MenuItem({ icon: 'img/edit.png', label: '新建',click:function(){
+            	node.activate();
+                $('#add-note-modal').modal({
+                  keyboard: true
+	            });
+            } }));
             menu.append(new gui.MenuItem({ icon: 'img/cut.png', label: '删除',click:function(){
-                    fs.unlink(node.data.key,function(err){
+            		var delFunc = null;
+            		if (node.data.isFolder) {
+            			delFunc = fs.rmdir;
+            		}else{
+            			delFunc = fs.unlink;
+            		}
+                    delFunc(node.data.key,function(err){
                         if(err){
                            alert(err); 
                         }else{

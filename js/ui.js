@@ -23,7 +23,7 @@ function showSideMenu(){
             $("#slider").show();
             $("#left").css("paddingLeft",250);
             $("#editor").css("width",$("#editor").get(0).offsetWidth - 250);
-            $(".dir")[0].setFocus();
+            //$(".dir")[0].setFocus();
         }else{
             $("#slider").css("display","none");
             $("#left").css("paddingLeft",0);
@@ -344,23 +344,26 @@ $("#btn-add-type-save").click(function(){
 
 
 $("#btn-add-note-save").click(function(){
-            var noteName = $("#note-input").get(0).value;
-            var dirName = $("#note-input").get(0).dirPath;
-            var notePath = dirName + "/" + noteName;
-            var dirNode = $("#note-input").get(0).dirNode;
-            var subNode = $(dirNode).find("ul").get(0);
-            fs.open(notePath ,"w+",function(err){
-                if(err){
-                    alert(err);
-                }else{
-                    addMenu(noteName,subNode,notePath)
-                    $('#add-note-modal').modal("hide");
-                    curFile = notePath;
-                    editor.setValue("");
-                }
-            });
+    var node = $("#tree").dynatree("getActiveNode");
+    if(!node){
+        return;
+    }
+    var noteName = $("#note-input").get(0).value;
+    var fullPath = node.data.key + "/" + noteName;
+    fs.open(fullPath,"w+",function(err){
+        if(err){
+            alert(err);
+        }else{
+            node.addChild({
+                title:noteName,
+                key: fullPath,
+                isFolder: false
+                });
+            editor.setValue("");
         }
-);
+    });
+    $('#add-note-modal').modal("hide");
+});
 
 
 
