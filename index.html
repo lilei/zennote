@@ -120,12 +120,8 @@
         </div>
 
         <div id = "slider" class = "sliderbar" style = "display:none">
-    <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse" id="side-menu">
-                </div>
-                <!-- /.sidebar-collapse -->
+            <div id="tree">
             </div>
-            <!-- /.navbar-static-side --> 
     </div>
 
         </nav>
@@ -222,9 +218,13 @@
     <script src="src-noconflict/keybinding-vim.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/marked.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery.hotkeys.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/sideMenu.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./js/jquery-ui.custom.js" type="text/javascript"></script>
+    <script src="./js/jquery.cookie.js" type="text/javascript"></script>
+    <link href="./css/skin-vista/ui.dynatree.css" rel="stylesheet" type="text/css" id="skinSheet">
+    <script src="./js/jquery.dynatree.js" type="text/javascript"></script>
+    <script src="./js/tree.js" type="text/javascript"></script>
     <script type="text/javascript">
         function exeCode(node,lang){
            var ret = document.createElement("pre");
