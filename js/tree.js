@@ -47,12 +47,18 @@ $(function(){
 				//logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
 				if (!node.data.isFolder) {
 					draggable = false;
-				}else{
-					sourceNode.move(node, hitMode);
-					if (!node.bExpanded) {
-						node.toggleExpand();
-					};
+					return;
 				}
+				fs.rename(sourceNode.data.key,node.data.key + "/" + sourceNode.data.title,function(err){
+					if (err) {
+							alert("move doc failed");
+						}else{
+							sourceNode.move(node, hitMode);
+							if (!node.bExpanded) {
+								node.toggleExpand();
+							}
+						}
+				});
 			},
 			onDragLeave: function(node, sourceNode) {
 				//logMsg("tree.onDragLeave(%o, %o)", node, sourceNode);
