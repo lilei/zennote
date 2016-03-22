@@ -6,6 +6,17 @@ $(function(){
 		//children: data,
 		onActivate: function(node) {
 			//$("#echoActive").text(node.data.title + "(" + node.data.key + ")");
+			if (node.data.isFolder) {
+				return;
+			};
+			fs.readFile(node.data.key,function(err,data){
+                if(err){
+                    alert("read file failed");
+                }else{
+                    //curFile = e.target.data;
+                    editor.setValue(String(data));
+                }
+            }); 
 		},
 		onDeactivate: function(node) {
 			//$("#echoActive").text("-");
@@ -67,13 +78,15 @@ function walk(path,parentNode){
          	var childNode = parentNode.addChild({
 				title: files[fn],
 				isFolder: true, 
-				expand: true 
+				expand: true ,
+				key: fname
 				});
 	        walk(fname,childNode);  
 		}else{
 			parentNode.addChild({
 				title: files[fn],
-				isFolder: false
+				isFolder: false,
+				key: fname
 			});
          }
     }
