@@ -331,23 +331,32 @@ $('#add-type-modal').on('shown.bs.modal', function (e) {
 })
 
 $("#btn-add-type-save").click(function(){
-            var dirName = $("#type-input").get(0).value;
-            fs.mkdir("./doc/" + dirName ,function(err){
-                if(err){
-                    alert(err);
-                }else{
-                    var node = $('#side-menu').get(0);
-                    addDir(node,dirName);
-                    $('#add-type-modal').modal("hide");
-                }
-            });
+    var node = $("#tree").dynatree("getActiveNode");
+    if(!node || !node.data.isFolder){
+        node = $("#tree").dynatree("getRoot");
+    }
+    var noteName = $("#type-input").get(0).value;
+    var fullPath = node.data.key + "/" + noteName;
+    fs.mkdir(fullPath,function(err){
+        if(err){
+            alert(err);
+        }else{
+            var newNode = node.addChild({
+                title:noteName,
+                key: fullPath,
+                isFolder: true
+                });
+                newNode.activate();
         }
-);
+    });
+    $('#add-type-modal').modal("hide");
+});
+
 
 
 $("#btn-add-note-save").click(function(){
     var node = $("#tree").dynatree("getActiveNode");
-    if(!node || node.data.isFolder){
+    if(!node || !node.data.isFolder){
         node = $("#tree").dynatree("getRoot");
     }
     var noteName = $("#note-input").get(0).value;
@@ -356,11 +365,13 @@ $("#btn-add-note-save").click(function(){
         if(err){
             alert(err);
         }else{
-            node.addChild({
+            var newNode = node.addChild({
                 title:noteName,
                 key: fullPath,
                 isFolder: false
                 });
+                $(document).attr("title",noteName + " -zennote");
+                newNode.activate();
             editor.setValue("");
         }
     });
