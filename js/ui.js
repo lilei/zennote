@@ -49,9 +49,7 @@ addCommand("#btn-save",
         "Alt-S",
         "保存",
         function(){
-            fs.writeFile(curFile,editor.getValue(),function(err){
-                    if(err) throw err;
-                });
+            saveCurFile();
         }
 );
 

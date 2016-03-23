@@ -15,13 +15,13 @@ $(function(){
 			if (node.data.isFolder) {
 				return;
 			};
-			$(document).attr("title",node.data.title + " -zennote");
 			fs.readFile(node.data.key,function(err,data){
                 if(err){
                     alert("read file failed");
                 }else{
                     //curFile = e.target.data;
                     editor.setValue(String(data));
+                    setCurFile(node);
                 }
             }); 
 		},
@@ -158,3 +158,21 @@ function bindContextMenu(node,span) {
             return false;
         },false);
 };
+
+function setCurFile(node){
+    $(document).attr("title",node.data.title + " -zennote");
+	curFile = node.data.key;
+	node.activate();
+}
+
+function getCurfile(){
+	return curFile;
+}
+
+function saveCurFile(){
+	fs.writeFile(curFile,editor.getValue(),function(err){
+        if(err){
+        	alert(err);
+        };
+    });
+}
