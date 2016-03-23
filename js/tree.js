@@ -15,6 +15,7 @@ $(function(){
 			if (node.data.isFolder) {
 				return;
 			};
+			$(document).attr("title",node.data.title + " -zennote");
 			fs.readFile(node.data.key,function(err,data){
                 if(err){
                     alert("read file failed");
@@ -38,7 +39,6 @@ $(function(){
 			},
 			onDragStop: function(node) {
 				//logMsg("tree.onDragStop(%o)", node);
-				alert("drag stop");
 			},
 			autoExpandMS: 1000,
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
