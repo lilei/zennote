@@ -3,6 +3,9 @@ var fs = require("fs");
 var gui = require("nw.gui");
 gui.Window.get().show();
 
+var curFile;
+var rootDir = "./doc";
+
 $(function(){
 	// --- Initialize first Dynatree -------------------------------------------
 	$("#tree").dynatree({
@@ -35,6 +38,7 @@ $(function(){
 			},
 			onDragStop: function(node) {
 				//logMsg("tree.onDragStop(%o)", node);
+				alert("drag stop");
 			},
 			autoExpandMS: 1000,
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
@@ -56,7 +60,22 @@ $(function(){
 					draggable = false;
 					return;
 				}
-				fs.rename(sourceNode.data.key,node.data.key + "/" + sourceNode.data.title,function(err){
+				var destPath = node.data.key;
+				switch(hitMode){
+					case "over": 
+						destPath = node.data.key;
+						break;
+					case "after":
+						if (node.bExpanded) {
+							destPath = node.data.key;
+							hitMode = "over";
+							break;
+						};
+					case "before": 
+						var parent = node.getParent();
+						destPath = parent.data.key;
+				}
+				fs.rename(sourceNode.data.key,destPath + "/" + sourceNode.data.title,function(err){
 					if (err) {
 							alert("move doc failed");
 						}else{
@@ -74,6 +93,7 @@ $(function(){
 		}
 	});
 	var rootNode = $("#tree").dynatree("getRoot");
+	rootNode.data.key = "./doc";
 	walk("./doc",rootNode);
 });
 
@@ -108,13 +128,15 @@ function walk(path,parentNode){
 
 function bindContextMenu(node,span) {
 	span.addEventListener('contextmenu', function(ev){
-            var menu = new gui.Menu();
+        var menu = new gui.Menu();
+		if (node.data.isFolder) {
             menu.append(new gui.MenuItem({ icon: 'img/edit.png', label: '新建',click:function(){
             	node.activate();
                 $('#add-note-modal').modal({
                   keyboard: true
 	            });
             } }));
+		};
             menu.append(new gui.MenuItem({ icon: 'img/cut.png', label: '删除',click:function(){
             		var delFunc = null;
             		if (node.data.isFolder) {

@@ -134,7 +134,9 @@ addCommand("#btn-new",
         "Alt-C",
         "新建文档",
         function(){
-          $("#openFile").trigger("click");
+          $('#add-note-modal').modal({
+                  keyboard: true
+            });
         }
 );
 
@@ -345,8 +347,8 @@ $("#btn-add-type-save").click(function(){
 
 $("#btn-add-note-save").click(function(){
     var node = $("#tree").dynatree("getActiveNode");
-    if(!node){
-        return;
+    if(!node || node.data.isFolder){
+        node = $("#tree").dynatree("getRoot");
     }
     var noteName = $("#note-input").get(0).value;
     var fullPath = node.data.key + "/" + noteName;

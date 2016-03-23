@@ -1,6 +1,5 @@
 var fs = require("fs");
 
-var curFile;
 
 
 function walk(path,parentNode){
