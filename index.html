@@ -230,18 +230,16 @@
     <script type="text/javascript">
         function exeCode(node,lang){
            var ret = document.createElement("pre");
-		
-           $.ajax({url:"/compile/" + lang,type:"POST",data:node.innerText,
+           $.ajax({url:"http://10.19.136.107/compile/" + lang,type:"post",data:node.innerText,
                success:function(text){
-		   ret.innerHTML = text;
-                   //alert(text);
+               ret.innerHTML = text;
+                node.parentNode.appendChild(ret);
                 },
-               error:function(){
-                   alert("error");
+               error:function(req,err){
+                   alert(err);
                 }
             }
            );
-           node.parentNode.appendChild(ret);
         }
 
     </script>
