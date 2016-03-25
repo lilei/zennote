@@ -46,7 +46,7 @@ addCommand("#btn-slider",
 
 //保存
 addCommand("#btn-save",
-        "Alt-S",
+        "Ctrl-S",
         "保存",
         function(){
             saveCurFile();
@@ -368,8 +368,7 @@ $("#btn-add-note-save").click(function(){
                 key: fullPath,
                 isFolder: false
                 });
-                $(document).attr("title",noteName + " -zennote");
-                newNode.activate();
+                setCurFile(newNode);
             editor.setValue("");
         }
     });
