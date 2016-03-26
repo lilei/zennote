@@ -12,6 +12,7 @@ $(function(){
 		//children: data,
 		onActivate: function(node) {
 			//$("#echoActive").text(node.data.title + "(" + node.data.key + ")");
+			saveCurFile();
 			if (node.data.isFolder) {
 				return;
 			};
@@ -170,6 +171,9 @@ function getCurfile(){
 }
 
 function saveCurFile(){
+	if (!curFile) {
+		return;
+	};
 	fs.writeFile(curFile,editor.getValue(),function(err){
         if(err){
         	alert(err);
